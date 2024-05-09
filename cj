@@ -12,9 +12,10 @@ cj() {
     cached_path=""
     if [ ! -d "$dst" ]; then
         if [ -f "$CACHE_FILE" ]; then
-            # echo "grep $dst $CACHE_FILE"
-            cached_path=$(grep "$dst\$" "$CACHE_FILE")
-            if [ -n "$cached_path" ]; then
+            # echo grep -w  "$dst\$" "$CACHE_FILE"
+            cached_path=$(grep -w "$dst\$" "$CACHE_FILE")
+
+            if [ ! -z "$cached_path" ]; then
                 dst=$cached_path
             else
                 echo "Directory not found $1 in cache"
@@ -27,10 +28,10 @@ cj() {
             sed -i 'id' "$CACHE_FILE"
         fi
     fi
-
+    
     cd "$dst" || return 1
-         
-    if [ ! -n $(grep "$PWD\$" "$CACHE_FILE") ]; then 
+    # echo  grep "$PWD\$" "$CACHE_FILE"
+    if [ -z $(grep "$PWD\$" "$CACHE_FILE") ]; then 
         echo "$PWD" >> "$CACHE_FILE"
     fi
 }
